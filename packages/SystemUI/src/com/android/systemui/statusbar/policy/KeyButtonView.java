@@ -325,7 +325,7 @@ public class KeyButtonView extends ImageView {
                 if (mCode == KeyEvent.KEYCODE_DPAD_LEFT || mCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                     sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_VIRTUAL_HARD_KEY
                             | KeyEvent.FLAG_KEEP_TOUCH_MODE, mDownTime, false);
-                } else if (mCode != 0) {
+                } else if (mCode != 0 && mCode != KeyEvent.KEYCODE_POWER) {
                     sendEvent(KeyEvent.ACTION_DOWN, 0, mDownTime);
                 } else {
                     // Provide the same haptic feedback that the system offers for virtual keys.
@@ -333,7 +333,12 @@ public class KeyButtonView extends ImageView {
                 }
                 if (supportsLongPress()) {
                     removeCallbacks(mCheckLongPress);
+                    	if (mCode == KeyEvent.KEYCODE_POWER) {
+                    	postDelayed(mCheckLongPress, 0);
+                    	}
+                    	else {
                     postDelayed(mCheckLongPress, ViewConfiguration.getLongPressTimeout());
+                    	}
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -356,7 +361,7 @@ public class KeyButtonView extends ImageView {
             case MotionEvent.ACTION_UP:
                 final boolean doIt = isPressed();
                 setPressed(false);
-                if (mCode != 0) {
+                if (mCode != 0 && mCode != KeyEvent.KEYCODE_POWER) {
                     if (doIt) {
                         sendEvent(KeyEvent.ACTION_UP, 0);
                         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
