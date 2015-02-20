@@ -1949,7 +1949,9 @@ public class ConnectivityService extends IConnectivityManager.Stub {
                             final boolean previouslyValidated = nai.validated;
                             final int previousScore = nai.getCurrentScore();
                             nai.validated = true;
-                            rematchNetworkAndRequests(nai, !previouslyValidated);
+                            //rematchNetworkAndRequests(nai, !previouslyValidated);
+							//mng temp hack to avoid ppp conection loop
+                            rematchNetworkAndRequests(nai, false);
                             // If score has changed, rebroadcast to NetworkFactories. b/17726566
                             if (nai.getCurrentScore() != previousScore) {
                                 sendUpdatedScoreToFactories(nai);
