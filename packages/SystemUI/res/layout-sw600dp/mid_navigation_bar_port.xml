@@ -69,25 +69,37 @@
         android:animateLayoutChanges="true">
         <com.android.systemui.statusbar.policy.KeyButtonView
             android:id="@+id/two"
-            android:layout_width="128dp" android:paddingLeft="25dp" android:paddingRight="25dp"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
             android:layout_height="match_parent"
             systemui:keyRepeat="true"
             android:layout_weight="0" />
         <com.android.systemui.statusbar.policy.KeyButtonView
             android:id="@+id/three"
-            android:layout_width="128dp" android:paddingLeft="25dp" android:paddingRight="25dp"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
             android:layout_height="match_parent"
             systemui:keyRepeat="true"
             android:layout_weight="0" />
         <com.android.systemui.statusbar.policy.KeyButtonView
             android:id="@+id/four"
-            android:layout_width="128dp" android:paddingLeft="25dp" android:paddingRight="25dp"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
             systemui:keyRepeat="true" />
         <com.android.systemui.statusbar.policy.KeyButtonView
             android:id="@+id/five"
-            android:layout_width="128dp" android:paddingLeft="25dp" android:paddingRight="25dp"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            systemui:keyRepeat="true" />
+        <com.android.systemui.statusbar.policy.KeyButtonView
+            android:id="@+id/six"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            systemui:keyRepeat="true" />
+        <com.android.systemui.statusbar.policy.KeyButtonView
+            android:id="@+id/seven"
+            android:layout_width="85dp" android:paddingLeft="16dp" android:paddingRight="16dp"
             android:layout_height="match_parent"
             android:layout_weight="0"
             systemui:keyRepeat="true" />
@@ -110,7 +122,7 @@
             android:visibility="invisible"
             android:contentDescription="@string/accessibility_ime_switch_button" />
         <com.android.systemui.statusbar.policy.KeyButtonView
-            android:id="@+id/six"
+            android:id="@+id/eight"
             android:layout_width="@dimen/navigation_extra_key_width"
             android:layout_height="match_parent"
             android:layout_weight="0"
