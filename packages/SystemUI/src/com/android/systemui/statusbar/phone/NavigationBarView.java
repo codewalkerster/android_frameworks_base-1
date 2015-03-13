@@ -796,7 +796,7 @@ public class NavigationBarView extends LinearLayout {
         int visibility = visible ? View.VISIBLE : View.INVISIBLE;
         if (mSlotOneVisibility != -1 && findView.getId() == R.id.one) {
             mSlotOneVisibility = visibility;
-        } else if (mSlotSixVisibility != -1 && findView.getId() == R.id.six) {
+        } else if (mSlotSixVisibility != -1 && findView.getId() == R.id.eight) {
             mSlotSixVisibility = visibility;
         } else {
             findView.setVisibility(visibility);
