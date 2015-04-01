@@ -419,8 +419,8 @@ public class NavigationBarView extends LinearLayout {
             setVisibleOrGone(getCurrentView().findViewById(R.id.dpad_left), showingIme);
             setVisibleOrGone(getCurrentView().findViewById(R.id.dpad_right), showingIme);
 
-            View one = getCurrentView().findViewById(mVertical ? R.id.six : R.id.one);
-            View six = getCurrentView().findViewById(mVertical ? R.id.one : R.id.six);
+            View one = getCurrentView().findViewById(mVertical ? R.id.eight : R.id.one);
+            View six = getCurrentView().findViewById(mVertical ? R.id.one : R.id.eight);
             if (showingIme) {
                 mSlotOneVisibility = one.getVisibility();
                 mSlotSixVisibility = six.getVisibility();
@@ -829,7 +829,7 @@ public class NavigationBarView extends LinearLayout {
         int visibility = visible ? View.VISIBLE : View.INVISIBLE;
         if (mSlotOneVisibility != -1 && findView.getId() == R.id.one) {
             mSlotOneVisibility = visibility;
-        } else if (mSlotSixVisibility != -1 && findView.getId() == R.id.six) {
+        } else if (mSlotSixVisibility != -1 && findView.getId() == R.id.eight) {
             mSlotSixVisibility = visibility;
         } else {
             findView.setVisibility(visibility);
