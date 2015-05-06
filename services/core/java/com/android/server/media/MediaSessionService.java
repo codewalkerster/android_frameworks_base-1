@@ -56,6 +56,7 @@ import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Slog;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 
@@ -715,16 +716,29 @@ public class MediaSessionService extends SystemService implements Monitor {
                 Log.w(TAG, "Attempted to dispatch null or non-media key event.");
                 return;
             }
+
             final int pid = Binder.getCallingPid();
             final int uid = Binder.getCallingUid();
             final long token = Binder.clearCallingIdentity();
-
             try {
+                if (!isUserSetupComplete()) {
+                    // Global media key handling can have the side-effect of starting new
+                    // activities which is undesirable while setup is in progress.
+                    Slog.i(TAG, "Not dispatching media key event because user "
+                            + "setup is in progress.");
+                    return;
+                }
+
                 synchronized (mLock) {
                     // If we don't have a media button receiver to fall back on
                     // include non-playing sessions for dispatching
-                    boolean useNotPlayingSessions = mUserRecords.get(
-                            ActivityManager.getCurrentUser()).mLastMediaButtonReceiver == null;
+                    UserRecord user = mUserRecords.get(mCurrentUserId);
+                    if (user == null) {
+                        Log.e(TAG, "Invalid UserRecord for current user : " + mCurrentUserId);
+                        return;
+                    }
+
+                    boolean useNotPlayingSessions = user.mLastMediaButtonReceiver == null;
                     MediaSessionRecord session = mPriorityStack
                             .getDefaultMediaButtonSession(mCurrentUserId, useNotPlayingSessions);
                     if (isVoiceKey(keyEvent.getKeyCode())) {
@@ -799,7 +813,7 @@ public class MediaSessionService extends SystemService implements Monitor {
                 count = mUserRecords.size();
                 for (int i = 0; i < count; i++) {
                     UserRecord user = mUserRecords.get(i);
-                    user.dumpLocked(pw, "");
+                    if (user != null) user.dumpLocked(pw, "");
                 }
             }
         }
@@ -929,7 +943,7 @@ public class MediaSessionService extends SystemService implements Monitor {
                 // Launch the last PendingIntent we had with priority
                 int userId = ActivityManager.getCurrentUser();
                 UserRecord user = mUserRecords.get(userId);
-                if (user.mLastMediaButtonReceiver != null) {
+                if ((user != null) && (user.mLastMediaButtonReceiver != null)) {
                     if (DEBUG) {
                         Log.d(TAG, "Sending media key to last known PendingIntent");
                     }
@@ -1005,6 +1019,11 @@ public class MediaSessionService extends SystemService implements Monitor {
 
         private boolean isVoiceKey(int keyCode) {
             return keyCode == KeyEvent.KEYCODE_HEADSETHOOK;
+        }
+
+        private boolean isUserSetupComplete() {
+            return Settings.Secure.getIntForUser(getContext().getContentResolver(),
+                    Settings.Secure.USER_SETUP_COMPLETE, 0, UserHandle.USER_CURRENT) != 0;
         }
 
         // we only handle public stream types, which are 0-5
