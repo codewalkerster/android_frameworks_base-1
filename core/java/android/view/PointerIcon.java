@@ -65,7 +65,9 @@ public final class PointerIcon implements Parcelable {
 
     /** {@hide} Style constant: Hovering icon for stylus. */
     public static final int STYLE_STYLUS_HOVER = 2003;
-
+	//codewalker
+    /** {@hide} Style constant: Spot anchor icon for touchpads. */
+    public static final int STYLE_ZOOM = 2004;
 
     // OEM private styles should be defined starting at this range to avoid
     // conflicts with any system styles that may be defined in the future.
@@ -111,6 +113,20 @@ public final class PointerIcon implements Parcelable {
     public static PointerIcon getDefaultIcon(Context context) {
         return getSystemIcon(context, STYLE_DEFAULT);
     }
+
+	//codewalker
+    /**
+     * Gets the default pointer icon.
+     *
+     * @param context The context.
+     * @return The default pointer icon.
+     *
+     * @throws IllegalArgumentException if context is null.
+     */
+    public static PointerIcon getZoomIcon(Context context) {
+        return getSystemIcon(context, STYLE_ZOOM);
+    }
+
 
     /**
      * Gets a system pointer icon for the given style.
@@ -464,6 +480,8 @@ public final class PointerIcon implements Parcelable {
                 return com.android.internal.R.styleable.Pointer_pointerIconSpotAnchor;
             case STYLE_STYLUS_HOVER:
                 return com.android.internal.R.styleable.Pointer_pointerIconStylusHover;
+            case STYLE_ZOOM:
+                return com.android.internal.R.styleable.Pointer_pointerIconZoom;
             default:
                 return 0;
         }

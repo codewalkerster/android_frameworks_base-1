@@ -85,6 +85,8 @@ static struct {
     jmethodID getLongPressTimeout;
     jmethodID getPointerLayer;
     jmethodID getPointerIcon;
+	//codewalker
+    jmethodID getZoomIcon;
     jmethodID getKeyboardLayoutOverlay;
     jmethodID getDeviceAlias;
     jmethodID getTouchCalibrationForInputDevice;
@@ -198,6 +200,9 @@ public:
 
     virtual void getReaderConfiguration(InputReaderConfiguration* outConfig);
     virtual sp<PointerControllerInterface> obtainPointerController(int32_t deviceId);
+	//codewalker
+    virtual sp<PointerControllerInterface> getZoomPointerIcon(int32_t deviceId);
+    virtual sp<PointerControllerInterface> getArrowPointerIcon(int32_t deviceId);
     virtual void notifyInputDevicesChanged(const Vector<InputDeviceInfo>& inputDevices);
     virtual sp<KeyCharacterMap> getKeyboardLayoutOverlay(const InputDeviceIdentifier& identifier);
     virtual String8 getDeviceAlias(const InputDeviceIdentifier& identifier);
@@ -475,6 +480,56 @@ sp<PointerControllerInterface> NativeInputManager::obtainPointerController(int32
 
         updateInactivityTimeoutLocked(controller);
     }
+    return controller;
+}
+
+//codewalker
+sp<PointerControllerInterface> NativeInputManager::getArrowPointerIcon(int32_t deviceId) {
+    AutoMutex _l(mLock);
+
+    sp<PointerController> controller = mLocked.pointerController.promote();
+
+    JNIEnv* env = jniEnv();
+    jobject pointerIconObj = env->CallObjectMethod(mServiceObj,
+            gServiceClassInfo.getPointerIcon);
+    if (!checkAndClearExceptionFromCallback(env, "getPointerIcon")) {
+        PointerIcon pointerIcon;
+        status_t status = android_view_PointerIcon_load(env, pointerIconObj,
+                mContextObj, &pointerIcon);
+        if (!status && !pointerIcon.isNullIcon()) {
+            controller->setPointerIcon(SpriteIcon(pointerIcon.bitmap,
+                    pointerIcon.hotSpotX, pointerIcon.hotSpotY));
+        } else {
+            controller->setPointerIcon(SpriteIcon());
+        }
+        env->DeleteLocalRef(pointerIconObj);
+    }
+
+    return controller;
+}
+
+//codewalker
+sp<PointerControllerInterface> NativeInputManager::getZoomPointerIcon(int32_t deviceId) {
+    AutoMutex _l(mLock);
+
+    sp<PointerController> controller = mLocked.pointerController.promote();
+
+    JNIEnv* env = jniEnv();
+    jobject pointerIconObj = env->CallObjectMethod(mServiceObj,
+            gServiceClassInfo.getZoomIcon);
+    if (!checkAndClearExceptionFromCallback(env, "getZoomIcon")) {
+        PointerIcon pointerIcon;
+        status_t status = android_view_PointerIcon_load(env, pointerIconObj,
+                mContextObj, &pointerIcon);
+        if (!status && !pointerIcon.isNullIcon()) {
+            controller->setPointerIcon(SpriteIcon(pointerIcon.bitmap,
+                    pointerIcon.hotSpotX, pointerIcon.hotSpotY));
+        } else {
+            controller->setPointerIcon(SpriteIcon());
+        }
+        env->DeleteLocalRef(pointerIconObj);
+    }
+
     return controller;
 }
 
@@ -1581,6 +1636,10 @@ int register_android_server_InputManager(JNIEnv* env) {
 
     GET_METHOD_ID(gServiceClassInfo.getPointerIcon, clazz,
             "getPointerIcon", "()Landroid/view/PointerIcon;");
+
+	//codewalker
+    GET_METHOD_ID(gServiceClassInfo.getZoomIcon, clazz,
+            "getZoomIcon", "()Landroid/view/PointerIcon;");
 
     GET_METHOD_ID(gServiceClassInfo.getKeyboardLayoutOverlay, clazz,
             "getKeyboardLayoutOverlay",
