@@ -84,16 +84,12 @@ public class SignalClusterView
     private ImageView mDataActivity;
     private boolean mIsAirplaneMode = false;
     private int mAirplaneIconId = 0;
-    private String mWifiDescription, mMobileDescription, mMobileTypeDescription,
-            mEthernetDescription;
-    private boolean mEthernetVisible = false;
-    private int mEthernetIconId = 0;
+    private String mWifiDescription, mMobileDescription, mMobileTypeDescription;
     private boolean mRoaming;
     private boolean mIsMobileTypeIconWide;
 
     ViewGroup mWifiGroup, mMobileGroup;
-    ImageView mVpn, mWifi, mMobile, mMobileType, mAirplane, mNoSimSlot,
-	mEthernet;
+    ImageView mVpn, mWifi, mMobile, mMobileType, mAirplane, mNoSimSlot;
     ImageView mWifiActivity, mMobileActivity;
     View mWifiAirplaneSpacer;
     View mWifiSignalSpacer;
@@ -165,7 +161,6 @@ public class SignalClusterView
         mAirplane       = (ImageView) findViewById(R.id.airplane);
         mWifiAirplaneSpacer =         findViewById(R.id.wifi_airplane_spacer);
         mWifiSignalSpacer =           findViewById(R.id.wifi_signal_spacer);
-        mEthernet       = (ImageView) findViewById(R.id.ethernet);
 
         apply();
     }
@@ -188,7 +183,6 @@ public class SignalClusterView
         mDataGroup          = null;
         mDataActivity       = null;
         mAirplane           = null;
-        mEthernet       = null;
 
         mMobileDataVoiceGroup = null;
         mMobileSignalData     = null;
@@ -301,16 +295,6 @@ public class SignalClusterView
     }
 
     @Override
-    public void setEthernetIndicators(boolean visible, int ethernetIcon,
-            String contentDescription) {
-        mEthernetVisible = visible;
-        mEthernetIconId = ethernetIcon;
-        mEthernetDescription = contentDescription;
-
-        apply();
-    }
-
-    @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
         // Standard group layout onPopulateAccessibilityEvent() implementations
         // ignore content description, so populate manually
@@ -347,10 +331,6 @@ public class SignalClusterView
 
         if(mAirplane != null) {
             mAirplane.setImageDrawable(null);
-        }
-
-        if(mEthernet != null) {
-            mEthernet.setImageDrawable(null);
         }
 
         apply();
@@ -411,14 +391,6 @@ public class SignalClusterView
             mWifiSignalSpacer.setVisibility(View.VISIBLE);
         } else {
             mWifiSignalSpacer.setVisibility(View.GONE);
-        }
-
-        if (mEthernetVisible) {
-            mEthernet.setVisibility(View.VISIBLE);
-            mEthernet.setImageResource(mEthernetIconId);
-            mEthernet.setContentDescription(mEthernetDescription);
-        } else {
-            mEthernet.setVisibility(View.GONE);
         }
 
         mMobile.setPaddingRelative(mIsMobileTypeIconWide ? mWideTypeIconStartPadding : 0, 0, 0, 0);
